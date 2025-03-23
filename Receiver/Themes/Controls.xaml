@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style x:Key="CustomWindowStyle" TargetType="{x:Type Window}">
+        <!--<Setter Property="Background" Value="{DynamicResource Window.Static.Background}"/>
+        <Setter Property="Foreground" Value="{DynamicResource Window.Static.Foreground}"/>-->
+        <Setter Property="TextOptions.TextRenderingMode" Value="ClearType"/>
+        <Setter Property="TextOptions.TextHintingMode" Value="Fixed" />
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+    </Style>
+
+</ResourceDictionary>
