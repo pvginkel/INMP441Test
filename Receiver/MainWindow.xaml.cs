@@ -17,8 +17,8 @@ namespace Receiver
         private const int ListenPort = 55581;
 
         private const int SampleRate = 16000;
-        private const int BitRate = 32;
-        private const int ChannelCount = 2;
+        private const int BitRate = 16;
+        private const int ChannelCount = 1;
 
         private WasapiOut? _waveOut;
         private BufferedWaveProvider? _bufferedWaveProvider;
