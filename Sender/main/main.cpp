@@ -17,27 +17,24 @@
 #include "nvs_flash.h"
 #include "secrets.h"
 
-#define SAMPLE_RATE 16000
-#define BIT_WIDTH 32
+// **** Configuration ****
 
 #define DATA_PIN 1
 #define SCK_PIN 2
 #define WS_PIN 4
 
+#define GAIN_BITS 3
+
 #define RECEIVER_PORT 55581
 #define RECEIVER_IP "192.168.178.190"
 
-#define GAIN_BITS 2
-
 #define WIFI_SSID "Thing-Fish"
 
+// **** End of configuration ****
+
+#define SAMPLE_RATE 16000
+
 #define esp_get_millis() uint32_t(esp_timer_get_time() / 1000ull)
-
-#define __CONCAT3(a, b, c) a##b##c
-#define CONCAT3(a, b, c) __CONCAT3(a, b, c)
-
-#define DATA_BIT_WIDTH CONCAT3(I2S_DATA_BIT_WIDTH_, BIT_WIDTH, BIT)
-#define SLOT_BIT_WIDTH CONCAT3(I2S_SLOT_BIT_WIDTH_, BIT_WIDTH, BIT)
 
 static const char *TAG = "main";
 
@@ -109,18 +106,7 @@ void setup_wifi() {
             {
                 .ssid = WIFI_SSID,
                 .password = WIFI_PASSWORD,
-
-                // Authmode threshold resets to WPA2 as default if password
-                // matches WPA2 standards (pasword len => 8). If you want to
-                // connect the device to deprecated WEP/WPA networks, Please set
-                // the threshold value to WIFI_AUTH_WEP/WIFI_AUTH_WPA_PSK and
-                // set the password with length and format matching to
-                // WIFI_AUTH_WEP/WIFI_AUTH_WPA_PSK standards.
-
-                .threshold =
-                    {
-                        .authmode = WIFI_AUTH_WPA2_PSK,
-                    },
+                .threshold = {.authmode = WIFI_AUTH_WPA2_PSK},
                 .sae_pwe_h2e = WPA3_SAE_PWE_BOTH,
                 .sae_h2e_identifier = "",
             },
@@ -150,17 +136,15 @@ void setup_i2s() {
     i2s_chan_config_t chan_config = I2S_CHANNEL_DEFAULT_CONFIG(I2S_NUM_0, I2S_ROLE_MASTER);
     ESP_ERROR_CHECK(i2s_new_channel(&chan_config, NULL, &chan));
 
-    // See https://www.esp32.com/viewtopic.php?t=32328.
-
     i2s_std_config_t rx_std_cfg = {
         .clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG(SAMPLE_RATE),
         .slot_cfg =
             {
-                .data_bit_width = DATA_BIT_WIDTH,
-                .slot_bit_width = SLOT_BIT_WIDTH,
+                .data_bit_width = I2S_DATA_BIT_WIDTH_32BIT,
+                .slot_bit_width = I2S_SLOT_BIT_WIDTH_32BIT,
                 .slot_mode = I2S_SLOT_MODE_MONO,
                 .slot_mask = I2S_STD_SLOT_LEFT,
-                .ws_width = BIT_WIDTH,
+                .ws_width = 32,
                 .ws_pol = false,
                 .bit_shift = false,
                 .left_align = true,
