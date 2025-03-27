@@ -172,7 +172,7 @@ void setup_i2s() {
 void setup_afe() {
     models = esp_srmodel_init("model");
 
-    auto afe_config = afe_config_init("MR", models, AFE_TYPE_VC, AFE_MODE_LOW_COST);
+    auto afe_config = afe_config_init("MR", models, AFE_TYPE_VC, AFE_MODE_HIGH_PERF);
 
     ESP_LOGI(TAG, "aec_init %d", (int)afe_config->aec_init);
     ESP_LOGI(TAG, "aec_mode %d", (int)afe_config->aec_mode);
@@ -334,7 +334,7 @@ int16_t parse_sample(int32_t raw_sample) {
     //
     // What we want to do is shift away slot bits 19 through 31, i.e. 13 bits.
 
-    return (int16_t)(raw_sample >> (11 + GAIN_BITS));
+    return (int16_t)(raw_sample >> (15 - GAIN_BITS));
 }
 
 void forward_task(void *param) {
